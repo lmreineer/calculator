@@ -2,8 +2,9 @@
 
 :root {
     --main_bg: rgb(39, 39, 39);
-    --btn_bg: rgb(82, 82, 82);
-    --btn_color: rgb(240, 240, 240);
+    --operand_bg: rgb(93, 93, 93);
+    --operand_color: rgb(228, 228, 228);
+    --operator_bg: rgb(201, 201, 201);
     --equal_bg: rgb(180, 143, 73);
     --ac_bg: rgb(180, 60, 60);
 }
@@ -36,10 +37,10 @@ body {
     margin: 2rem 2rem 0 2rem;
     padding: 1rem;
     gap: 1rem;
-    color: var(--main_bg);
-    background-color: var(--btn_color);
-    border: 0.5rem solid var(--btn_bg);
-    border-radius: 1rem;
+    color: var(--main_bg, black);
+    background-color: var(--operand_color, white);
+    border: 0.5rem solid var(--operand_bg, gray);
+    border-radius: 1.5rem;
 }
 
 .display-cov {
@@ -61,7 +62,11 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 10rem);
     grid-template-rows: repeat(5, 6rem);
-    margin: 1.5rem;
+    margin: 2rem;
+}
+
+.size-two {
+    grid-column: span 2;
 }
 
 .button-cov {
@@ -71,8 +76,6 @@ body {
 
 button {
     font-size: 2.5rem;
-    color: var(--btn_color);
-    background-color: var(--btn_bg);
     margin: 0.5rem;
     border: none;
     border-radius: 1rem;
@@ -80,31 +83,60 @@ button {
     text-shadow: 0px 1px 1px var(--main_bg, black);
 }
 
-button:active {
-    box-shadow: var(--btn_color) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+.operand {
+    color: var(--operand_color, white);
+    background-color: var(--operand_bg, gray);
+}
+
+.operand:active {
+    box-shadow: 0 0 7px 0 rgb(35, 35, 35) inset;
+    transform: translateY(2px);
+    transition: 0.02s;
 }
 
 .all-clear{
-    background-color: var(--ac_bg);
+    background-color: var(--ac_bg, darkred);
+    color: var(--operand_color, white);
 }
 
-.clear-entry {
-    filter: invert(100%);
+.all-clear:active {
+    box-shadow: 0 0 7px 0 rgb(67, 22, 22) inset;
+    transform: translateY(2px);
 }
 
 .equal {
-    background-color: var(--equal_bg);
+    background-color: var(--equal_bg, darkorange);
+    color: var(--operand_color, white)
 }
 
-.operator {
-    filter: invert(100%);
+.equal:active {
+    box-shadow: 0 0 7px 0 rgb(67, 54, 27) inset;
+    transform: translateY(2px);
+    transition: 0.02s;
+}
+
+.operator,
+.clear-entry {
+    background-color: var(--operator_bg, whitesmoke);
+    color: var(--main_bg, black);
+}
+
+.operator:active,
+.clear-entry:active {
+    box-shadow: 0 0 7px 0 rgb(75, 75, 75) inset;
+    transform: translateY(2px);
+    transition: 0.02s;
 }
 
 .dot {
-    filter: none;
+    background-color: var(--operand_bg, gray);
+    color: var(--operand_color, white);
 }
 
-.size-two {
-    grid-column: span 2;
+.dot:active {
+    box-shadow: 0 0 7px 0 rgb(35, 35, 35) inset;
+    transform: translateY(2px);
+    transition: 0.02s;
 }
+
 
