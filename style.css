@@ -1,7 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
 
 :root {
     --main_bg: rgb(39, 39, 39);
+    --btn_bg: rgb(82, 82, 82);
+    --btn_color: rgb(240, 240, 240);
+    --equal_bg: rgb(180, 143, 73);
+    --ac_bg: rgb(180, 60, 60);
 }
 
 *, *::before, *::after {
@@ -15,8 +19,7 @@
 }
 
 body {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
+    font-family: 'Outfit', sans-serif;
 }
 
 .container {
@@ -33,8 +36,9 @@ body {
     margin: 2rem 2rem 0 2rem;
     padding: 1rem;
     gap: 1rem;
-    color: white;
-    background-color: darkgreen;
+    color: var(--main_bg);
+    background-color: var(--btn_color);
+    border: 0.5rem solid var(--btn_bg);
     border-radius: 1rem;
 }
 
@@ -44,11 +48,13 @@ body {
 }
 
 .previous-display {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
+    text-shadow: 0px 2px 2px var(--main_bg, black);
 }
 
 .current-display {
-    font-size: 2rem;
+    font-size: 3rem;
+    text-shadow: 0px 2px 2px var(--main_bg, black);
 }
 
 .button-cont {
@@ -64,12 +70,38 @@ body {
 }
 
 button {
-    font-size: 2rem;
-    color: var(--main_bg, black);
+    font-size: 2.5rem;
+    color: var(--btn_color);
+    background-color: var(--btn_bg);
     margin: 0.5rem;
     border: none;
     border-radius: 1rem;
     cursor: pointer;
+    text-shadow: 0px 1px 1px var(--main_bg, black);
+}
+
+button:active {
+    box-shadow: var(--btn_color) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
+.all-clear{
+    background-color: var(--ac_bg);
+}
+
+.clear-entry {
+    filter: invert(100%);
+}
+
+.equal {
+    background-color: var(--equal_bg);
+}
+
+.operator {
+    filter: invert(100%);
+}
+
+.dot {
+    filter: none;
 }
 
 .size-two {
