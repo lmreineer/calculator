@@ -42,6 +42,7 @@ body {
     background-color: var(--operand_color, white);
     border: 0.5rem solid var(--operand_bg, gray);
     border-radius: 1.5rem;
+    height: 10rem
 }
 
 .display-cov {
@@ -50,7 +51,7 @@ body {
 }
 
 .previous-display {
-    font-size: 2.5rem;
+    font-size: 2rem;
     text-shadow: 0px 2px 2px var(--main_bg, black);
 }
 
@@ -149,6 +150,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
@@ -179,6 +181,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
@@ -209,6 +212,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
@@ -239,6 +243,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
@@ -269,6 +274,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
@@ -299,6 +305,7 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 1rem;
     }
     
     .previous-display {
@@ -358,14 +365,15 @@ button {
 
     .display-cont {
         margin: 1rem 1rem 0 1rem;
+        gap: 2rem;
     }
     
     .previous-display {
-        font-size: 1rem;
+        font-size: 1.5rem;
     }
     
     .current-display {
-        font-size: 1.5rem;
+        font-size: 2.5rem;
     }
     
     .button-cont {
