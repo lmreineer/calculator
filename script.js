@@ -30,6 +30,20 @@ class Calculator {
         this.currentDisplay.innerHTML += e.target.innerHTML;
     }
 
+    displayNegative(e) {
+        if(e.target.innerHTML.includes('-')) {
+            if(this.currentDisplay.innerHTML == '') {
+                this.currentDisplay.innerHTML = e.target.innerHTML;
+            }
+            else if(!this.currentDisplay.innerHTML == '') {
+                return;
+            }
+        }
+        else if(this.previousDisplay.innerHTML.includes('-')) {
+            return;
+        }
+    }
+
     displayOperators(e) {
         if(!this.currentDisplay.innerHTML == '') {
             this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
@@ -91,6 +105,7 @@ operandButtons.forEach(x => {
 operatorButtons.forEach(x => {
     x.addEventListener('click', (e) => {
         calculator.displayOperators(e);
+        calculator.displayNegative(e);
 
         /* styles for previous-display */
         previousDisplayText.style.opacity = '0.9';
