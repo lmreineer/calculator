@@ -31,32 +31,42 @@ class Calculator {
     }
 
     displayNegative(e) {
-        if(e.target.innerHTML.includes('-')) {
-            if(this.currentDisplay.innerHTML == '') {
-                this.currentDisplay.innerHTML = e.target.innerHTML;
+        const hasNumber = /\d/;
+        const hasNotANumber = /[^0-9]/g;
+
+        if(!this.previousDisplay.innerHTML == '')  {
+            this.currentDisplay.innerHTML = '';
+            if(
+            this.previousDisplay.innerHTML.includes('x') ||
+            this.previousDisplay.innerHTML.includes('÷') || 
+            this.previousDisplay.innerHTML.includes('%') &&
+            this.currentDisplay.innerHTML == '') {
+
+                this.currentDisplay.innerHTML = '-';
+                
             }
-            else if(!this.currentDisplay.innerHTML == '') {
-                return;
+            else if(
+            this.previousDisplay.innerHTML.includes('+') || 
+            this.previousDisplay.innerHTML.includes('-') &&
+            this.currentDisplay.innerHTML == '') {
+
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', e.target.innerHTML);
+
             }
         }
-        else if(this.previousDisplay.innerHTML.includes('-')) {
-            return;
+        else if(this.currentDisplay.innerHTML == '') {
+            this.currentDisplay.innerHTML = '-';
         }
     }
 
     displayOperators(e) {
-        if(!this.currentDisplay.innerHTML == '') {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
-        }
-        else if(!this.previousDisplay.innerHTML == '') {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
-        }
-        else {
-            return;
-        }
+        const hasNumber = /\d/;
+        const hasNotANumber = /[^0-9]/g;
 
-        this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + this.previousDisplay.innerHTML;
-        this.currentDisplay.innerHTML = '';
+        if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
+            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+            this.currentDisplay.innerHTML = '';
+        }
     }
 
     compute() {
@@ -86,6 +96,7 @@ class Calculator {
 
 const operandButtons = document.querySelectorAll('[data-type="operand"]');
 const operatorButtons = document.querySelectorAll('[data-type="operator"]');
+const negativeButton = document.querySelector('[data-mode="negative"]');
 const allClearButton = document.querySelector('[data-type="all-clear"]');
 const clearEntryButton = document.querySelector('[data-type="clear-entry"]');
 const dotButton = document.querySelector('[data-type="dot"]');
@@ -98,14 +109,13 @@ const calculator = new Calculator(previousDisplayText, currentDisplayText);
 
 operandButtons.forEach(x => {
     x.addEventListener('click', (e) => {
-        calculator.displayOperands(e);
+        calculator.displayOperands(e);  
     })
 })
 
 operatorButtons.forEach(x => {
     x.addEventListener('click', (e) => {
         calculator.displayOperators(e);
-        calculator.displayNegative(e);
 
         /* styles for previous-display */
         previousDisplayText.style.opacity = '0.9';
@@ -115,6 +125,10 @@ operatorButtons.forEach(x => {
             previousDisplayText.style.transition = '0.2s';
             previousDisplayText.style.opacity = '0.8';
     })
+})
+
+negativeButton.addEventListener('click', (e) => {
+    calculator.displayNegative(e);
 })
 
 allClearButton.addEventListener('click', () => {
