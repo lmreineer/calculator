@@ -37,11 +37,29 @@ class Calculator {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
             this.currentDisplay.innerHTML = '';
         }
-        else if(e.target.innerHTML == '%') {
-            if(!this.previousDisplay.innerHTML.includes('%')) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 1) + e.target.innerHTML;
+    }
+
+    displaySum(e) {
+        const hasNumber = /\d/;
+        const hasNotANumber = /[^0-9]/g;
+
+        if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
+            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+            this.currentDisplay.innerHTML = '';
+        }
+        else if(this.previousDisplay.innerHTML.includes('%')) {
+            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+            if(this.currentDisplay.innerHTML.includes('-')) {
+                this.currentDisplay.innerHTML = '';
             }
         }
+        else if(
+            (this.previousDisplay.innerHTML.includes('-')) ||
+            (this.previousDisplay.innerHTML.includes('x')) ||
+            (this.previousDisplay.innerHTML.includes('÷'))) {
+            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 1) + e.target.innerHTML; 
+        }
+
     }
 
     displayNegative(e) {
@@ -52,10 +70,12 @@ class Calculator {
             this.currentDisplay.innerHTML = '';
             if(
             this.previousDisplay.innerHTML.includes('x') ||
-            this.previousDisplay.innerHTML.includes('÷') ||
             this.previousDisplay.innerHTML.includes('%')) {
 
                 this.currentDisplay.innerHTML = '-';
+
+            }
+            else if(this.previousDisplay.innerHTML.includes('%')) {
 
             }
 
@@ -88,13 +108,26 @@ class Calculator {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
             this.currentDisplay.innerHTML = '';
         }
-        else if(!this.previousDisplay.innerHTML.includes('%')) {
-            if(hasNotANumber.test(this.previousDisplay.innerHTML) == true) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+        else if(!this.previousDisplay.innerHTML == '') {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                }
             }
-        }
-        else if(this.previousDisplay.innerHTML.includes('%') && !this.currentDisplay.innerHTML.includes('-')) {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
+            else if(this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+                }
+                // logical syntax for adding modulo, if minus is applied it can be changed if multiplication or division is applied before minus and minus is applied after, it cannot be changed
+                else if(this.currentDisplay.innerHTML.includes('-')) {
+                    if(
+                    (!this.previousDisplay.innerHTML.includes('x')) &&
+                    (!this.previousDisplay.innerHTML.includes('÷'))) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+                        this.currentDisplay.innerHTML = '';
+                    }
+                }
+            }
         }
     }
 
@@ -139,6 +172,7 @@ class Calculator {
 const operandButtons = document.querySelectorAll('[data-type="operand"]');
 const operatorButtons = document.querySelectorAll('[data-type="operator"]');
 const negativeButton = document.querySelector('[data-mode="negative"]');
+const sumButton = document.querySelector('[data-mode="sum"]')
 const moduloButton = document.querySelector('[data-mode="modulo"]');
 const allClearButton = document.querySelector('[data-type="all-clear"]');
 const clearEntryButton = document.querySelector('[data-type="clear-entry"]');
@@ -172,6 +206,10 @@ operatorButtons.forEach(x => {
 
 negativeButton.addEventListener('click', (e) => {
     calculator.displayNegative(e);
+})
+
+sumButton.addEventListener('click', (e) => {
+    calculator.displaySum(e);
 })
 
 moduloButton.addEventListener('click', (e) => {
