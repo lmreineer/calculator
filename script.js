@@ -43,6 +43,7 @@ class Calculator {
         const hasNumber = /\d/;
         const hasNotANumber = /[^0-9]/g;
         const hasMinus = /-/g;
+        const hasMultiply = /x/g;
 
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
@@ -52,14 +53,19 @@ class Calculator {
             this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('-', '+');
         }
         else if(this.previousDisplay.innerHTML.includes('%')) {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
-            if(
-            (!this.previousDisplay.innerHTML.includes('x')) ||
-            (!this.previousDisplay.innerHTML.includes('÷'))) {
-                if(this.currentDisplay.innerHTML.includes('-')) {
-                    this.currentDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('-')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
+                this.currentDisplay.innerHTML = '';
+                if(
+                (this.previousDisplay.innerHTML.includes('x')) ||
+                (this.previousDisplay.innerHTML.includes('÷'))) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2);
+                    this.currentDisplay.innerHTML = '-'
                 }
-            }                                                                        //NEEDS TO MAKE IT STAY TO ITS SYNTAX IF MULTIPLY/DIVIDE BEFORE MINUS IS APPLIED
+            }
+            else if(!this.currentDisplay.innerHTML.includes('-')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+            }
         }
     }
 
@@ -70,8 +76,9 @@ class Calculator {
         if(!this.previousDisplay.innerHTML == '')  {
             this.currentDisplay.innerHTML = '';
             if(
-            this.previousDisplay.innerHTML.includes('x') ||
-            this.previousDisplay.innerHTML.includes('%')) {
+            (this.previousDisplay.innerHTML.includes('x')) ||
+            (this.previousDisplay.innerHTML.includes('÷')) ||
+            (this.previousDisplay.innerHTML.includes('%'))) {
 
                 this.currentDisplay.innerHTML = '-';
 
