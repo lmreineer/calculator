@@ -37,67 +37,102 @@ class Calculator {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
             this.currentDisplay.innerHTML = '';
         }
+        else if(this.previousDisplay.innerHTML.includes('+')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', '%');
+                }
+            }
+        }
+        else if(this.previousDisplay.innerHTML.includes('-')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('-', '%');
+                }
+            }
+        }
+        else if(this.previousDisplay.innerHTML.includes('x')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', '%');
+                }
+            }
+        }
+        else if(this.previousDisplay.innerHTML.includes('÷')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', '%');
+                }
+            }
+        }
     }
 
     displaySum(e) {
         const hasNumber = /\d/;
-        const hasNotANumber = /[^0-9]/g;
-        const hasMinus = /-/g;
-        const hasMultiply = /x/g;
-
-        if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
+        
+        if(!this.currentDisplay.innerHTML == '') {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
             this.currentDisplay.innerHTML = '';
         }
-        else if(this.previousDisplay.innerHTML.includes('-')) {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('-', '+');
-        }
         else if(this.previousDisplay.innerHTML.includes('%')) {
-            if(this.currentDisplay.innerHTML.includes('-')) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
+            if(
+            (!this.previousDisplay.innerHTML.includes('-')) &&
+            (!this.currentDisplay.innerHTML.includes('-'))) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
+            }
+            else if(this.previousDisplay.innerHTML.includes('-')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
                 this.currentDisplay.innerHTML = '';
-                if(
-                (this.previousDisplay.innerHTML.includes('x')) ||
-                (this.previousDisplay.innerHTML.includes('÷'))) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2);
-                    this.currentDisplay.innerHTML = '-'
+            }
+        }
+        else if(
+        (!this.previousDisplay.innerHTML.includes('%')) &&
+        (this.previousDisplay.innerHTML.includes('-'))) {
+            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+        }
+        else if(this.previousDisplay.innerHTML.includes('x')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', '+');
                 }
             }
-            else if(!this.currentDisplay.innerHTML.includes('-')) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+        }
+        else if(this.previousDisplay.innerHTML.includes('÷')) {
+            if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', '+');
+                }
             }
         }
     }
 
     displayNegative(e) {
         const hasNumber = /\d/;
-        const hasNotANumber = /[^0-9]/g;
 
         if(!this.previousDisplay.innerHTML == '')  {
-            this.currentDisplay.innerHTML = '';
             if(
             (this.previousDisplay.innerHTML.includes('x')) ||
-            (this.previousDisplay.innerHTML.includes('÷')) ||
-            (this.previousDisplay.innerHTML.includes('%'))) {
-
+            (this.previousDisplay.innerHTML.includes('÷'))) {
                 this.currentDisplay.innerHTML = '-';
-
             }
             else if(this.previousDisplay.innerHTML.includes('%')) {
-
-            }
-
-            // enable repeating sum and minus signs
-            if(this.previousDisplay.innerHTML.includes('+')) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', ' - ');
-                if(this.previousDisplay.innerHTML.includes(' - ')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace(' - ', '');
-                    if(!this.previousDisplay.innerHTML.includes(' - ')) {
-                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + ' - ';
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.currentDisplay.innerHTML = '-'
+                    if(
+                    (this.previousDisplay.innerHTML.includes('+')) &&
+                    (this.previousDisplay.innerHTML.includes('-'))) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3);
+                    }
+                    else if(
+                    (this.previousDisplay.innerHTML.includes('+')) &&
+                    (!this.previousDisplay.innerHTML.includes('-'))) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', '')
                     }
                 }
-                if(this.previousDisplay.innerHTML.includes('%')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('-', '');
+            }
+            else if(!this.previousDisplay.innerHTML.includes('%')) {
+                if(!this.previousDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
                 }
             }
         }
@@ -113,7 +148,6 @@ class Calculator {
     
     displayOperators(e) {
         const hasNumber = /\d/;
-        const hasNotANumber = /[^0-9]/g;
         
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
@@ -127,9 +161,13 @@ class Calculator {
             }
             else if(this.previousDisplay.innerHTML.includes('%')) {
                 if(!this.currentDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
+                    if(this.previousDisplay.innerHTML.includes('+')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    }
                 }
-                // logical syntax for adding modulo, if minus is applied it can be changed if multiplication or division is applied before minus and minus is applied after, it cannot be changed
+                // logical syntax for adding modulo, if minus is applied it can be changed if 
+                // multiplication or division is applied before minus and minus is applied after, then it cannot be changed
                 else if(this.currentDisplay.innerHTML.includes('-')) {
                     if(
                     (!this.previousDisplay.innerHTML.includes('x')) &&
