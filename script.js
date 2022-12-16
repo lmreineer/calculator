@@ -70,37 +70,79 @@ class Calculator {
     displaySum(e) {
         const hasNumber = /\d/;
         
-        if(!this.currentDisplay.innerHTML == '') {
+        if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
             this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
             this.currentDisplay.innerHTML = '';
         }
         else if(this.previousDisplay.innerHTML.includes('%')) {
-            if(
-            (!this.previousDisplay.innerHTML.includes('-')) &&
-            (!this.currentDisplay.innerHTML.includes('-'))) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
+            if(this.previousDisplay.innerHTML.includes('-')) {
+                if(!this.previousDisplay.innerHTML.includes('x')) {                                                     //flex-wrap works here, in this part
+                    if(!this.previousDisplay.innerHTML.includes('÷')) {
+                        if(!this.currentDisplay.innerHTML.includes('-')) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
+                            this.currentDisplay.innerHTML = '';
+                        }
+                        else if(this.currentDisplay.innerHTML.includes('-')) {
+                            if(!this.previousDisplay.innerHTML.includes('+')) {
+                                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;               //both of this part duplicates '+'
+                                this.currentDisplay.innerHTML = '';
+                            }
+                        }
+                    }
+                }
             }
-            else if(this.previousDisplay.innerHTML.includes('-')) {
-                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
-                this.currentDisplay.innerHTML = '';
-            }
-        }
-        else if(
-        (!this.previousDisplay.innerHTML.includes('%')) &&
-        (this.previousDisplay.innerHTML.includes('-'))) {
-            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
-        }
-        else if(this.previousDisplay.innerHTML.includes('x')) {
-            if(!this.previousDisplay.innerHTML.includes('%')) {
+            else if(this.previousDisplay.innerHTML.includes('x')) {
                 if(!this.currentDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', '+');
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', e.target.innerHTML);
+                }
+            }
+            else if(this.previousDisplay.innerHTML.includes('÷')) {
+                if(!this.currentDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', e.target.innerHTML);
+                }
+            }
+            else if(!this.previousDisplay.innerHTML.includes('x')) {
+                if(this.currentDisplay.innerHTML.includes('-')) {
+                    if(!this.previousDisplay.innerHTML.includes('+')) {
+                        if(!this.previousDisplay.innerHTML.includes('÷')) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
+                            this.currentDisplay.innerHTML = '';
+                        }
+                    }
+                }
+                else if(!this.previousDisplay.innerHTML.includes('÷')) {
+                    if(!this.previousDisplay.innerHTML.includes('-')) {
+                        if(!this.previousDisplay.innerHTML.includes('+')) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
+                        }
+                    }
                 }
             }
         }
-        else if(this.previousDisplay.innerHTML.includes('÷')) {
-            if(!this.previousDisplay.innerHTML.includes('%')) {
-                if(!this.currentDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', '+');
+        else if(!this.previousDisplay.innerHTML.includes('%')) {
+            if(!this.previousDisplay.innerHTML.includes('x')) {
+                if(!this.previousDisplay.innerHTML.includes('÷')) {
+                    if(this.previousDisplay.innerHTML.includes('-')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    }
+                }
+                else if(this.previousDisplay.innerHTML.includes('÷')) {
+                    if(!this.currentDisplay.innerHTML.includes('-')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', e.target.innerHTML);
+                    }
+                }
+            }
+            else if(this.previousDisplay.innerHTML.includes('x')) {
+                if(this.previousDisplay.innerHTML.includes('-')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', e.target.innerHTML);
+                    if(this.previousDisplay.innerHTML.includes('+')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -1);
+                    }
+                }
+                else if(!this.previousDisplay.innerHTML.includes('-')) {
+                    if(!this.currentDisplay.innerHTML.includes('-')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', e.target.innerHTML);
+                    }
                 }
             }
         }
@@ -121,7 +163,8 @@ class Calculator {
                     if(
                     (this.previousDisplay.innerHTML.includes('+')) &&
                     (this.previousDisplay.innerHTML.includes('-'))) {
-                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3);
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', '');
+                        this.currentDisplay.innerHTML = '-';
                     }
                     else if(
                     (this.previousDisplay.innerHTML.includes('+')) &&
@@ -132,7 +175,12 @@ class Calculator {
             }
             else if(!this.previousDisplay.innerHTML.includes('%')) {
                 if(!this.previousDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -3) + e.target.innerHTML;
+                }
+                else if(this.previousDisplay.innerHTML.includes('-')) {
+                    if(this.previousDisplay.innerHTML.includes('+')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    }
                 }
             }
         }
@@ -156,14 +204,47 @@ class Calculator {
         else if(!this.previousDisplay.innerHTML == '') {
             if(!this.previousDisplay.innerHTML.includes('%')) {
                 if(!this.currentDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML;
+                    if(this.previousDisplay.innerHTML.includes('-')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    }
+                    else if(this.previousDisplay.innerHTML.includes('+')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', e.target.innerHTML);
+                    }
+                    else if(this.previousDisplay.innerHTML.includes('x')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', e.target.innerHTML);
+                    }
+                    else if(this.previousDisplay.innerHTML.includes('÷')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', e.target.innerHTML);
+                    }
                 }
             }
             else if(this.previousDisplay.innerHTML.includes('%')) {
                 if(!this.currentDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 3) + e.target.innerHTML;
-                    if(this.previousDisplay.innerHTML.includes('+')) {
-                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -2) + e.target.innerHTML;
+                    if(!this.previousDisplay.innerHTML.includes('+')) {
+                        if(
+                        (!this.previousDisplay.innerHTML.includes('x')) &&
+                        (!this.previousDisplay.innerHTML.includes('÷'))) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + ' x ';
+                        }
+                        else if(
+                        (!this.previousDisplay.innerHTML.includes('÷')) &&
+                        (!this.previousDisplay.innerHTML.includes('x'))) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + ' ÷ ';
+                        }
+                        else if(
+                        (this.previousDisplay.innerHTML.includes('x')) &&
+                        (!this.previousDisplay.innerHTML.includes('÷'))) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('x', e.target.innerHTML);
+                        }
+                        else if(
+                        (this.previousDisplay.innerHTML.includes('÷')) &&
+                        (!this.previousDisplay.innerHTML.includes('x'))) {
+                            this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('÷', e.target.innerHTML);
+                        }
+                    }
+                    else if(this.previousDisplay.innerHTML.includes('+')) {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('+', e.target.innerHTML)
                     }
                 }
                 // logical syntax for adding modulo, if minus is applied it can be changed if 
@@ -172,7 +253,7 @@ class Calculator {
                     if(
                     (!this.previousDisplay.innerHTML.includes('x')) &&
                     (!this.previousDisplay.innerHTML.includes('÷'))) {
-                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, 2) + e.target.innerHTML;
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML + e.target.innerHTML;
                         this.currentDisplay.innerHTML = '';
                     }
                 }
