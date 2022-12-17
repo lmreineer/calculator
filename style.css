@@ -39,7 +39,7 @@ body {
     height: 10.5rem;
     width: 30rem;
     margin: 2rem 2rem 0 2rem;
-    padding: 1rem;
+    padding: 1rem; 
     gap: 1rem;
     color: var(--main_bg, black);
     background-color: var(--operand_color, white);

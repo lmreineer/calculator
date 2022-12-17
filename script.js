@@ -6,14 +6,23 @@ class Calculator {
 
     clearAll() {
         this.previousDisplay.innerHTML = '';
-        this.currentDisplay.innerHTML = '';
+        this.currentDisplay.innerHTML = '𝟢';
     }
 
-    clearLastEntry () {
-        this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.slice(0, -1);
-        if(this.currentDisplay.innerHTML == '') {
-            this.currentDisplay.innerHTML = this.previousDisplay.innerHTML;
-            this.previousDisplay.innerHTML = '';
+    clearLastEntry (e) {
+        const hasNumber = /\d/;
+
+        if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
+            this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.slice(0, -1);
+            if(hasNumber.test(this.previousDisplay.innerHTML) == true) {
+                if(this.currentDisplay.innerHTML == '') {
+                    this.currentDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -1);
+                    this.previousDisplay.innerHTML = '';
+                }
+            }
+            else if(this.currentDisplay.innerHTML == '') {
+                this.currentDisplay.innerHTML = '𝟢';
+            }
         }
     }
 
@@ -27,7 +36,20 @@ class Calculator {
     }
 
     displayOperands(e) {
+        const hasNoZero = /[1-9]/g;
+        
         this.currentDisplay.innerHTML += e.target.innerHTML;
+        if(hasNoZero.test(this.currentDisplay.innerHTML) == false) {
+            if(e.target.innerHTML == '0') {
+                this.currentDisplay.innerHTML = '𝟢';
+            }
+        }
+        else if(this.currentDisplay.innerHTML.includes('𝟢')) {
+            this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('𝟢', '')
+        }
+    }
+
+    displayKeyboardInput(e) {
     }
 
     displayModulo(e) {
@@ -184,7 +206,9 @@ class Calculator {
                 }
             }
         }
-        else if(this.currentDisplay.innerHTML == '') {
+        else if(
+        (this.currentDisplay.innerHTML == '') ||
+        (this.currentDisplay.innerHTML == '𝟢')) {
             this.currentDisplay.innerHTML = '-';
         }
         else if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
@@ -316,7 +340,16 @@ const calculator = new Calculator(previousDisplayText, currentDisplayText);
 
 operandButtons.forEach(x => {
     x.addEventListener('click', (e) => {
-        calculator.displayOperands(e);  
+        calculator.displayOperands(e);
+
+        if(currentDisplayText.innerHTML.includes('NaN')) {
+            currentDisplayText.innerHTML = '';
+            calculator.displayOperands(e);
+        }
+    })
+
+    x.addEventListener('keydown', (e) => {
+        calculator.displayKeyboardInput(e);
     })
 })
 
