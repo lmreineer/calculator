@@ -28,6 +28,9 @@ class Calculator {
             if(this.currentDisplay.innerHTML.includes('=')) {
                 this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '𝟢');
             }
+            else if(this.currentDisplay.innerHTML.includes('-')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('-', '𝟢');
+            }
         }
         else if(!this.previousDisplay.innerHTML == '') {
             if(this.currentDisplay.innerHTML == '') {
@@ -40,9 +43,9 @@ class Calculator {
     displayDot(e) {
         if(!this.currentDisplay.innerHTML.includes('.')) {
             this.currentDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
-        }
-        else {
-            return;
+            if(this.currentDisplay.innerHTML.includes('𝟢')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('𝟢', '');
+            }
         }
     }
 
@@ -61,9 +64,6 @@ class Calculator {
         else if(this.currentDisplay.innerHTML.includes('=')) {
             this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
         }
-    }
-
-    displayKeyboardInput(e) {
     }
 
     displayModulo(e) {
@@ -428,6 +428,42 @@ class Calculator {
             this.currentDisplay.innerHTML = '';
         }
     }
+
+    computeContinuallyForKeyboard(e) {
+        let previousParsed = parseFloat(previousDisplayText.innerHTML);
+        let currentParsed = parseFloat(currentDisplayText.innerHTML);
+    
+        if(previousDisplayText.innerHTML.includes('+')) {
+            let answer = previousParsed + currentParsed;
+            previousDisplayText.innerHTML =  Math.round(answer * 100) / 100 + ' ' + e.key + ' ';
+    
+            currentDisplayText.innerHTML = ' ';
+        }
+        else if(previousDisplayText.innerHTML.includes('-')) {
+            let answer = previousParsed - currentParsed;
+            previousDisplayText.innerHTML = Math.round(answer * 100) / 100 + ' ' + e.key + ' ';
+            
+            currentDisplayText.innerHTML = ' ';
+        }
+        else if(previousDisplayText.innerHTML.includes('x')) {
+            let answer = previousParsed * currentParsed;
+            previousDisplayText.innerHTML = Math.round(answer * 100) / 100 + ' ' + e.key + ' ';
+            
+            currentDisplayText.innerHTML = '';
+        }
+        else if(previousDisplayText.innerHTML.includes('÷')) {
+            let answer = previousParsed / currentParsed;
+            previousDisplayText.innerHTML = Math.round(answer * 100) / 100 + ' ' + e.key + ' ';
+            
+            currentDisplayText.innerHTML = ' ';
+        }
+        else if(previousDisplayText.innerHTML.includes('%')) {
+            let answer = previousParsed % currentParsed;
+            previousDisplayText.innerHTML = Math.round(answer * 100) / 100 + ' ' + e.key + ' ';
+            
+            currentDisplayText.innerHTML = ' ';
+        }
+    }
 }
 
 
@@ -454,10 +490,6 @@ operandButtons.forEach(x => {
             currentDisplayText.innerHTML = '';
             calculator.displayOperands(e);
         }
-    })
-
-    x.addEventListener('keydown', (e) => {
-        calculator.displayKeyboardInput(e);
     })
 })
 
@@ -501,4 +533,341 @@ dotButton.addEventListener('click', (e) => {
 
 equalButton.addEventListener('click', () => {
     calculator.compute();
+}) 
+
+
+
+// another version of previous code
+document.addEventListener('keydown', (e) => {
+    // similar to clearLastEntry()
+    if(e.key == 'Backspace') {
+        calculator.clearLastEntry(e);
+    }
+
+    else if(e.key == 'Escape') {
+        calculator.clearAll();
+    }
+
+    else if((e.key >= 0 && e.key <= 9)) {
+        const hasNoZero = /[1-9]/g;
+
+        currentDisplayText.innerHTML += e.key;
+        if(hasNoZero.test(currentDisplayText.innerHTML) == false) {
+            if(e.key == 0) {
+                currentDisplayText.innerHTML = '𝟢';
+            }
+        }
+        else if(currentDisplayText.innerHTML.includes('𝟢')) {
+            currentDisplayText.innerHTML = currentDisplayText.innerHTML.replace('𝟢', '')
+        }
+        else if(currentDisplayText.innerHTML.includes('=')) {
+            currentDisplayText.innerHTML = currentDisplayText.innerHTML.replace('=', '');
+        }
+    }
+
+    // similar to displayDot(e)
+    else if(e.key == '.') {
+        if(!currentDisplayText.innerHTML.includes('.')) {
+            currentDisplayText.innerHTML = currentDisplayText.innerHTML + e.key;
+            if(currentDisplayText.innerHTML.includes('𝟢')) {
+                currentDisplayText.innerHTML = currentDisplayText.innerHTML.replace('𝟢', '');
+            }
+        }
+    }
+
+    // the same code as displayModulo(e)
+    else if(e.shiftKey && e.key == '%') {
+        e.preventDefault();
+
+        const hasNumber = /\d/;
+
+        if(hasNumber.test(currentDisplayText.innerHTML) == true) {
+            if(previousDisplayText.innerHTML == '') {
+                previousDisplayText.innerHTML = currentDisplayText.innerHTML + '%';
+                currentDisplayText.innerHTML = '';
+                if(previousDisplayText.innerHTML.includes('=')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+                }
+            }
+            else if(!previousDisplayText.innerHTML == '') {
+                this.computeContinually(e);
+            }
+        }
+        else if(previousDisplayText.innerHTML.includes('+')) {
+            if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('+', '%');
+                }
+            }
+        }
+        else if(previousDisplayText.innerHTML.includes('-')) {
+            if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('-', '%');
+                }
+            }
+        }
+        else if(previousDisplayText.innerHTML.includes('x')) {
+            if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', '%');
+                }
+            }
+        }
+        else if(previousDisplayText.innerHTML.includes('÷')) {
+            if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('÷', '%');
+                }
+            }
+        }
+    }
+    
+    // the same code as displaySum(e)
+    else if(e.shiftKey && e.key == '+') {
+        e.preventDefault();
+
+        const hasNumber = /\d/;
+    
+        if(hasNumber.test(currentDisplayText.innerHTML) == true) {
+            if(previousDisplayText.innerHTML == '') {
+                previousDisplayText.innerHTML = currentDisplayText.innerHTML + ' + ';
+                currentDisplayText.innerHTML = '';
+                if(previousDisplayText.innerHTML.includes('=')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('=')) {
+                previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+            }
+            else if(!previousDisplayText.innerHTML == '') {
+                calculator.computeContinuallyForKeyboard(e);
+            }
+        }
+        else if(previousDisplayText.innerHTML.includes('%')) {
+            if(previousDisplayText.innerHTML.includes('-')) {
+                if(!previousDisplayText.innerHTML.includes('x')) {                                                     
+                    if(!previousDisplayText.innerHTML.includes('÷')) {
+                        if(!currentDisplayText.innerHTML.includes('-')) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' + ';
+                            currentDisplayText.innerHTML = '';
+                        }
+                        else if(currentDisplayText.innerHTML.includes('-')) {
+                            if(!previousDisplayText.innerHTML.includes('+')) {
+                                previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' + '; 
+                                currentDisplayText.innerHTML = '';
+                            }
+                        }
+                    }
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('x')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', ' + ');
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('÷')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('÷', ' + ');
+                }
+            }
+            else if(!previousDisplayText.innerHTML.includes('x')) {
+                if(currentDisplayText.innerHTML.includes('-')) {
+                    if(!previousDisplayText.innerHTML.includes('+')) {
+                        if(!previousDisplayText.innerHTML.includes('÷')) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' + ';
+                            currentDisplayText.innerHTML = '';
+                        }
+                    }
+                }
+                else if(!previousDisplayText.innerHTML.includes('÷')) {
+                    if(!previousDisplayText.innerHTML.includes('-')) {
+                        if(!previousDisplayText.innerHTML.includes('+')) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' + ';
+                        }
+                    }
+                }
+            }
+        }
+        else if(!previousDisplayText.innerHTML.includes('%')) {
+            if(!previousDisplayText.innerHTML.includes('x')) {
+                if(!previousDisplayText.innerHTML.includes('÷')) {
+                    if(previousDisplayText.innerHTML.includes('-')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.slice(0, -2) + ' + ';
+                    }
+                }
+                else if(previousDisplayText.innerHTML.includes('÷')) {
+                    if(!currentDisplayText.innerHTML.includes('-')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('÷', ' + ');
+                    }
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('x')) {
+                if(previousDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', ' + ');
+                    if(previousDisplayText.innerHTML.includes('+')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.slice(0, -1);
+                    }
+                }
+                else if(!previousDisplayText.innerHTML.includes('-')) {
+                    if(!currentDisplayText.innerHTML.includes('-')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', ' + ');
+                    }
+                }
+            }
+        }
+    }
+
+    // the same code as displayNegative(e)
+    else if(e.key == '-') {
+        const hasNumber = /\d/;
+
+        if(!previousDisplayText.innerHTML == '')  {
+            if(hasNumber.test(currentDisplayText.innerHTML) == true) {
+                calculator.computeContinuallyForKeyboard(e);
+            }
+            else if(
+            (previousDisplayText.innerHTML.includes('x')) ||
+            (previousDisplayText.innerHTML.includes('÷'))) {
+                currentDisplayText.innerHTML = '-';
+            }
+            else if(previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    currentDisplayText.innerHTML = '-'
+                    if(
+                    (previousDisplayText.innerHTML.includes('+')) &&
+                    (previousDisplayText.innerHTML.includes('-'))) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('+', '');
+                        currentDisplayText.innerHTML = '-';
+                    }
+                    else if(
+                    (previousDisplayText.innerHTML.includes('+')) &&
+                    (!previousDisplayText.innerHTML.includes('-'))) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('+', '')
+                    }
+                }
+            }
+            else if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!previousDisplayText.innerHTML.includes('-')) {
+                    if(currentDisplayText.innerHTML ==  '') {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.slice(0, -3) + ' ' + e.key + ' ';
+                    }
+                }
+                else if(previousDisplayText.innerHTML.includes('-')) {
+                    if(previousDisplayText.innerHTML.includes('+')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.slice(0, -2) + ' ' + e.key + ' ';
+                    }
+                }
+            }
+        }
+        else if(
+        (currentDisplayText.innerHTML == '') ||
+        (currentDisplayText.innerHTML == '𝟢')) {
+            currentDisplayText.innerHTML = '-';
+        }
+        else if(hasNumber.test(currentDisplayText.innerHTML) == true) {
+            if(previousDisplayText.innerHTML == '') {
+                previousDisplayText.innerHTML = currentDisplayText.innerHTML + ' ' + e.key + ' ';
+                currentDisplayText.innerHTML = '';
+                if(previousDisplayText.innerHTML.includes('=')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('=')) {
+                previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+            }
+        }
+    }
+
+    // the same code as displayOperators(e)
+    else if(
+    (e.shiftKey && e.key == '*') ||
+    (e.key == '/')) {
+        const hasNumber = /\d/;
+        
+        if(hasNumber.test(currentDisplayText.innerHTML) == true) {
+            if(previousDisplayText.innerHTML == '') {
+                previousDisplayText.innerHTML = currentDisplayText.innerHTML + ' ' + e.key + ' ';
+                currentDisplayText.innerHTML = '';
+                if(previousDisplayText.innerHTML.includes('=')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('=')) {
+                previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('=', '');
+            }
+            else if(!previousDisplayText.innerHTML == '') {
+                calculator.computeContinuallyForKeyboard(e);
+            }
+        }
+        else if(!previousDisplayText.innerHTML == '') {
+            if(!previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    previousDisplayText.innerHTML = previousDisplayText.innerHTML;
+                    if(previousDisplayText.innerHTML.includes('-')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.slice(0, -2) + ' ' + e.key + ' ';
+                    }
+                    else if(previousDisplayText.innerHTML.includes('+')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('+', ' ' + e.key + ' ');
+                    }
+                    else if(previousDisplayText.innerHTML.includes('x')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', ' ' + e.key + ' ');
+                    }
+                    else if(previousDisplayText.innerHTML.includes('÷')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('÷', ' ' + e.key + ' ');
+                    }
+                }
+            }
+            else if(previousDisplayText.innerHTML.includes('%')) {
+                if(!currentDisplayText.innerHTML.includes('-')) {
+                    if(!previousDisplayText.innerHTML.includes('+')) {
+                        if(
+                        (!previousDisplayText.innerHTML.includes('x')) &&
+                        (!previousDisplayText.innerHTML.includes('÷'))) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' x ';
+                        }
+                        else if(
+                        (!previousDisplayText.innerHTML.includes('÷')) &&
+                        (!previousDisplayText.innerHTML.includes('x'))) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' ÷ ';
+                        }
+                        else if(
+                        (previousDisplayText.innerHTML.includes('x')) &&
+                        (!previousDisplayText.innerHTML.includes('÷'))) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('x', ' ' + e.key + ' ');
+                        }
+                        else if(
+                        (previousDisplayText.innerHTML.includes('÷')) &&
+                        (!previousDisplayText.innerHTML.includes('x'))) {
+                            previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('÷', ' ' + e.key + ' ');
+                        }
+                    }
+                    else if(previousDisplayText.innerHTML.includes('+')) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('+', ' ' + e.key + ' ')
+                    }
+                }
+                
+                // same reason as the previous one
+                else if(currentDisplayText.innerHTML.includes('-')) {
+                    if(
+                    (!previousDisplayText.innerHTML.includes('x')) &&
+                    (!previousDisplayText.innerHTML.includes('÷'))) {
+                        previousDisplayText.innerHTML = previousDisplayText.innerHTML + ' ' + e.key + ' ';
+                        currentDisplayText.innerHTML = '';
+                    }
+                }
+            }
+        }
+        if(previousDisplayText.innerHTML.includes('/')) {
+            previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('/', '÷');
+        }
+        else if(previousDisplayText.innerHTML.includes('*')) {
+            previousDisplayText.innerHTML = previousDisplayText.innerHTML.replace('*', 'x');
+        }
+    }
+
+    else if(e.key == '=') {
+        calculator.compute();
+    }
 })
+    

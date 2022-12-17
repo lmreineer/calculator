@@ -88,6 +88,10 @@ button {
     text-shadow: 0px 1px 1px var(--main_bg, black);
 }
 
+button:focus {
+    outline: none;
+}
+
 .operand {
     color: var(--operand_color, white);
     background-color: var(--operand_bg, gray);
