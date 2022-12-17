@@ -9,7 +9,7 @@ class Calculator {
         this.currentDisplay.innerHTML = '𝟢';
     }
 
-    clearLastEntry (e) {
+    clearLastEntry () {
         const hasNumber = /\d/;
 
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
@@ -22,6 +22,17 @@ class Calculator {
             }
             else if(this.currentDisplay.innerHTML == '') {
                 this.currentDisplay.innerHTML = '𝟢';
+            }
+        }
+        else if(hasNumber.test(this.currentDisplay.innerHTML) == false) {
+            if(this.currentDisplay.innerHTML.includes('=')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '𝟢');
+            }
+        }
+        else if(!this.previousDisplay.innerHTML == '') {
+            if(this.currentDisplay.innerHTML == '') {
+                this.currentDisplay.innerHTML = this.previousDisplay.innerHTML;
+                this.previousDisplay.innerHTML = '';    
             }
         }
     }
@@ -47,6 +58,9 @@ class Calculator {
         else if(this.currentDisplay.innerHTML.includes('𝟢')) {
             this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('𝟢', '')
         }
+        else if(this.currentDisplay.innerHTML.includes('=')) {
+            this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+        }
     }
 
     displayKeyboardInput(e) {
@@ -56,8 +70,16 @@ class Calculator {
         const hasNumber = /\d/;
 
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
-            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
-            this.currentDisplay.innerHTML = '';
+            if(this.previousDisplay.innerHTML == '') {
+                this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+                this.currentDisplay.innerHTML = '';
+                if(this.previousDisplay.innerHTML.includes('=')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+                }
+            }
+            else if(!this.previousDisplay.innerHTML == '') {
+                this.computeContinually(e);
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('+')) {
             if(!this.previousDisplay.innerHTML.includes('%')) {
@@ -93,8 +115,19 @@ class Calculator {
         const hasNumber = /\d/;
         
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
-            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
-            this.currentDisplay.innerHTML = '';
+            if(this.previousDisplay.innerHTML == '') {
+                this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+                this.currentDisplay.innerHTML = '';
+                if(this.previousDisplay.innerHTML.includes('=')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+                }
+            }
+            else if(this.previousDisplay.innerHTML.includes('=')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+            }
+            else if(!this.previousDisplay.innerHTML == '') {
+                this.computeContinually(e);
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('%')) {
             if(this.previousDisplay.innerHTML.includes('-')) {
@@ -174,7 +207,10 @@ class Calculator {
         const hasNumber = /\d/;
 
         if(!this.previousDisplay.innerHTML == '')  {
-            if(
+            if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
+                this.computeContinually(e);
+            }
+            else if(
             (this.previousDisplay.innerHTML.includes('x')) ||
             (this.previousDisplay.innerHTML.includes('÷'))) {
                 this.currentDisplay.innerHTML = '-';
@@ -197,7 +233,9 @@ class Calculator {
             }
             else if(!this.previousDisplay.innerHTML.includes('%')) {
                 if(!this.previousDisplay.innerHTML.includes('-')) {
-                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -3) + e.target.innerHTML;
+                    if(this.currentDisplay.innerHTML ==  '') {
+                        this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.slice(0, -3) + e.target.innerHTML;
+                    }
                 }
                 else if(this.previousDisplay.innerHTML.includes('-')) {
                     if(this.previousDisplay.innerHTML.includes('+')) {
@@ -212,8 +250,16 @@ class Calculator {
             this.currentDisplay.innerHTML = '-';
         }
         else if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
-            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
-            this.currentDisplay.innerHTML = '';
+            if(this.previousDisplay.innerHTML == '') {
+                this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+                this.currentDisplay.innerHTML = '';
+                if(this.previousDisplay.innerHTML.includes('=')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+                }
+            }
+            else if(this.previousDisplay.innerHTML.includes('=')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+            }
         }
     }
 
@@ -222,8 +268,19 @@ class Calculator {
         const hasNumber = /\d/;
         
         if(hasNumber.test(this.currentDisplay.innerHTML) == true) {
-            this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
-            this.currentDisplay.innerHTML = '';
+            if(this.previousDisplay.innerHTML == '') {
+                this.previousDisplay.innerHTML = this.currentDisplay.innerHTML + e.target.innerHTML;
+                this.currentDisplay.innerHTML = '';
+                if(this.previousDisplay.innerHTML.includes('=')) {
+                    this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+                }
+            }
+            else if(this.previousDisplay.innerHTML.includes('=')) {
+                this.previousDisplay.innerHTML = this.previousDisplay.innerHTML.replace('=', '');
+            }
+            else if(!this.previousDisplay.innerHTML == '') {
+                this.computeContinually(e);
+            }
         }
         else if(!this.previousDisplay.innerHTML == '') {
             if(!this.previousDisplay.innerHTML.includes('%')) {
@@ -291,33 +348,84 @@ class Calculator {
 
         if(this.previousDisplay.innerHTML.includes('+')) {
             let answer = previousParsed + currentParsed;
-            this.currentDisplay.innerHTML = Math.round(answer * 100) / 100;
+            this.currentDisplay.innerHTML = '= ' + Math.round(answer * 100) / 100;
 
             this.previousDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('NaN')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('-')) {
             let answer = previousParsed - currentParsed;
-            this.currentDisplay.innerHTML = Math.round(answer * 100) / 100;
+            this.currentDisplay.innerHTML = '= ' + Math.round(answer * 100) / 100;
             
             this.previousDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('NaN')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('x')) {
             let answer = previousParsed * currentParsed;
-            this.currentDisplay.innerHTML = Math.round(answer * 100) / 100;
+            this.currentDisplay.innerHTML = '= ' + Math.round(answer * 100) / 100;
             
             this.previousDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('NaN')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('÷')) {
             let answer = previousParsed / currentParsed;
-            this.currentDisplay.innerHTML = Math.round(answer * 100) / 100;
+            this.currentDisplay.innerHTML = '= ' + Math.round(answer * 100) / 100;
             
             this.previousDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('NaN')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+            }
         }
         else if(this.previousDisplay.innerHTML.includes('%')) {
             let answer = previousParsed % currentParsed;
-            this.currentDisplay.innerHTML = Math.round(answer * 100) / 100;
+            this.currentDisplay.innerHTML = '= ' + Math.round(answer * 100) / 100;
             
             this.previousDisplay.innerHTML = '';
+            if(this.currentDisplay.innerHTML.includes('NaN')) {
+                this.currentDisplay.innerHTML = this.currentDisplay.innerHTML.replace('=', '');
+            }
+        }
+    }
+
+    computeContinually(e) {
+        let previousParsed = parseFloat(this.previousDisplay.innerHTML);
+        let currentParsed = parseFloat(this.currentDisplay.innerHTML);
+
+        if(this.previousDisplay.innerHTML.includes('+')) {
+            let answer = previousParsed + currentParsed;
+            this.previousDisplay.innerHTML =  Math.round(answer * 100) / 100 + e.target.innerHTML;
+
+            this.currentDisplay.innerHTML = '';
+        }
+        else if(this.previousDisplay.innerHTML.includes('-')) {
+            let answer = previousParsed - currentParsed;
+            this.previousDisplay.innerHTML = Math.round(answer * 100) / 100 + e.target.innerHTML;
+            
+            this.currentDisplay.innerHTML = '';
+        }
+        else if(this.previousDisplay.innerHTML.includes('x')) {
+            let answer = previousParsed * currentParsed;
+            this.previousDisplay.innerHTML = Math.round(answer * 100) / 100 + e.target.innerHTML;
+            
+            this.currentDisplay.innerHTML = '';
+        }
+        else if(this.previousDisplay.innerHTML.includes('÷')) {
+            let answer = previousParsed / currentParsed;
+            this.previousDisplay.innerHTML = Math.round(answer * 100) / 100 + e.target.innerHTML;
+            
+            this.currentDisplay.innerHTML = '';
+        }
+        else if(this.previousDisplay.innerHTML.includes('%')) {
+            let answer = previousParsed % currentParsed;
+            this.previousDisplay.innerHTML = Math.round(answer * 100) / 100 + e.target.innerHTML;
+            
+            this.currentDisplay.innerHTML = '';
         }
     }
 }
